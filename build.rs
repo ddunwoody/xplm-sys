@@ -5,25 +5,25 @@
  */
 
 fn main() {
+    println!("cargo:rerun-if-env-changed=XPLANE_SDK");
     let sdk_path = std::path::Path::new(env!("XPLANE_SDK"));
+
     configure(&sdk_path);
+
     #[cfg(feature = "generate-bindings")]
     generate_bindings(&sdk_path);
 }
 
-#[allow(unused_variables)]
 fn configure(sdk_path: &std::path::Path) {
-    println!("cargo:rerun-if-env-changed=XPLANE_SDK");
-    #[cfg(target_os = "macos")] {
+    let target = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
+    if target == "macos" {
         println!(
             "cargo:rustc-link-search=framework={}",
             sdk_path.join("Libraries/Mac").display()
         );
         println!("cargo:rustc-link-lib=framework=XPLM");
         println!("cargo:rustc-link-lib=framework=XPWidgets");
-    }
-
-    #[cfg(target_os = "windows")] {
+    } else if target == "windows" {
         println!(
             "cargo:rustc-link-search={}",
             sdk_path.join("Libraries/Win").display()
@@ -35,14 +35,8 @@ fn configure(sdk_path: &std::path::Path) {
 
 #[cfg(feature = "generate-bindings")]
 fn generate_bindings(sdk_path: &std::path::Path) {
-    use bindgen::Builder;
-    use cfg_if::cfg_if;
-
-
     println!("cargo:rerun-if-changed=xplm.h");
-
-
-    Builder::default()
+    bindgen::Builder::default()
         .clang_args([
             "-fparse-all-comments",
             "-DXPLM200",
