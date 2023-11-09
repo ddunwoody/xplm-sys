@@ -52,7 +52,7 @@ fn generate_bindings(sdk_path: &std::path::Path) {
         .allowlist_function("XPLM.*")
         .allowlist_type("XPLM.*")
         .allowlist_var("(?i)XPLM.*")
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings")
         .write_to_file("src/bindings.rs")
