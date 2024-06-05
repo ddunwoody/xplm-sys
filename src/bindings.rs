@@ -197,12 +197,29 @@ fn bindgen_test_layout_XPLMFixedString150_t() {
         )
     );
 }
-#[doc = " Control the camera until the user picks a new view."]
-pub const xplm_ControlCameraUntilViewChanges: _bindgen_ty_2 = 1;
-#[doc = " Control the camera until your plugin is disabled or another plugin forcibly*\n takes control."]
-pub const xplm_ControlCameraForever: _bindgen_ty_2 = 2;
-#[doc = " XPLMCameraControlDuration\n\n This enumeration states how long you want to retain control of the camera.\n You can retain it indefinitely or until the user selects a new view.\n"]
+#[doc = " X-Plane manages the cursor normally, plugin does not affect the cusrsor."]
+pub const xplm_CursorDefault: _bindgen_ty_2 = 0;
+#[doc = " X-Plane hides the cursor."]
+pub const xplm_CursorHidden: _bindgen_ty_2 = 1;
+#[doc = " X-Plane shows the cursor as the default arrow."]
+pub const xplm_CursorArrow: _bindgen_ty_2 = 2;
+#[doc = " X-Plane shows the cursor but lets you select an OS cursor."]
+pub const xplm_CursorCustom: _bindgen_ty_2 = 3;
+#[doc = " XPLMCursorStatus\n\n XPLMCursorStatus describes how you would like X-Plane to manage the cursor.\n See XPLMHandleCursor_f for more info.\n"]
 pub type _bindgen_ty_2 = ::std::os::raw::c_uint;
+pub type XPLMCursorStatus = ::std::os::raw::c_int;
+pub const xplm_MouseDown: _bindgen_ty_3 = 1;
+pub const xplm_MouseDrag: _bindgen_ty_3 = 2;
+pub const xplm_MouseUp: _bindgen_ty_3 = 3;
+#[doc = " XPLMMouseStatus\n\n     When the mouse is clicked, your mouse click routine is called\n     repeatedly.  It is first called with the mouse down message.  It is\n     then called zero or more times with the mouse-drag message, and finally\n     it is called once with the mouse up message.  All of these messages\n     will be directed to the same window; you are guaranteed to not receive\n     a drag or mouse-up event without first receiving the corresponding\n     mouse-down.\n"]
+pub type _bindgen_ty_3 = ::std::os::raw::c_uint;
+pub type XPLMMouseStatus = ::std::os::raw::c_int;
+#[doc = " Control the camera until the user picks a new view."]
+pub const xplm_ControlCameraUntilViewChanges: _bindgen_ty_4 = 1;
+#[doc = " Control the camera until your plugin is disabled or another plugin forcibly*\n takes control."]
+pub const xplm_ControlCameraForever: _bindgen_ty_4 = 2;
+#[doc = " XPLMCameraControlDuration\n\n This enumeration states how long you want to retain control of the camera.\n You can retain it indefinitely or until the user selects a new view.\n"]
+pub type _bindgen_ty_4 = ::std::os::raw::c_uint;
 pub type XPLMCameraControlDuration = ::std::os::raw::c_int;
 #[doc = " XPLMCameraPosition_t\n\n This structure contains a full specification of the camera. X, Y, and Z are\n the camera's position in OpenGL coordinates; pitch, roll, and yaw are\n rotations from a camera facing flat north in degrees. Positive pitch means\n nose up, positive roll means roll right, and positive yaw means yaw right,\n all in degrees. Zoom is a zoom factor, with 1.0 meaning normal zoom and 2.0\n magnifying by 2x (objects appear larger).\n"]
 #[repr(C)]
@@ -334,21 +351,21 @@ extern "C" {
 #[doc = " XPLMDataRef\n\n A dataref is an opaque handle to data provided by the simulator or another\n plugin. It uniquely identifies one variable (or array of variables) over\n the lifetime of your plugin. You never hard code these values; you always\n get them from XPLMFindDataRef.\n"]
 pub type XPLMDataRef = *mut ::std::os::raw::c_void;
 #[doc = " Data of a type the current XPLM doesn't do."]
-pub const xplmType_Unknown: _bindgen_ty_3 = 0;
+pub const xplmType_Unknown: _bindgen_ty_5 = 0;
 #[doc = " A single 4-byte integer, native endian."]
-pub const xplmType_Int: _bindgen_ty_3 = 1;
+pub const xplmType_Int: _bindgen_ty_5 = 1;
 #[doc = " A single 4-byte float, native endian."]
-pub const xplmType_Float: _bindgen_ty_3 = 2;
+pub const xplmType_Float: _bindgen_ty_5 = 2;
 #[doc = " A single 8-byte double, native endian."]
-pub const xplmType_Double: _bindgen_ty_3 = 4;
+pub const xplmType_Double: _bindgen_ty_5 = 4;
 #[doc = " An array of 4-byte floats, native endian."]
-pub const xplmType_FloatArray: _bindgen_ty_3 = 8;
+pub const xplmType_FloatArray: _bindgen_ty_5 = 8;
 #[doc = " An array of 4-byte integers, native endian."]
-pub const xplmType_IntArray: _bindgen_ty_3 = 16;
+pub const xplmType_IntArray: _bindgen_ty_5 = 16;
 #[doc = " A variable block of data."]
-pub const xplmType_Data: _bindgen_ty_3 = 32;
+pub const xplmType_Data: _bindgen_ty_5 = 32;
 #[doc = " XPLMDataTypeID\n\n This is an enumeration that defines the type of the data behind a data\n reference. This allows you to sanity check that the data type matches what\n you expect. But for the most part, you will know the type of data you are\n expecting from the online documentation.\n\n Data types each take a bit field; it is legal to have a single dataref be\n more than one type of data.  Whe this happens, you can pick any matching\n get/set API.\n"]
-pub type _bindgen_ty_3 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_5 = ::std::os::raw::c_uint;
 pub type XPLMDataTypeID = ::std::os::raw::c_int;
 extern "C" {
     #[doc = " XPLMCountDataRefs\n\n Returns the total number of datarefs that have been registered in X-Plane.\n"]
@@ -663,23 +680,23 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 #[doc = " This is the first phase where you can draw in 2-d."]
-pub const xplm_Phase_FirstCockpit: _bindgen_ty_4 = 35;
+pub const xplm_Phase_FirstCockpit: _bindgen_ty_6 = 35;
 #[doc = " The non-moving parts of the aircraft panel."]
-pub const xplm_Phase_Panel: _bindgen_ty_4 = 40;
+pub const xplm_Phase_Panel: _bindgen_ty_6 = 40;
 #[doc = " The moving parts of the aircraft panel."]
-pub const xplm_Phase_Gauges: _bindgen_ty_4 = 45;
+pub const xplm_Phase_Gauges: _bindgen_ty_6 = 45;
 #[doc = " Floating windows from plugins."]
-pub const xplm_Phase_Window: _bindgen_ty_4 = 50;
+pub const xplm_Phase_Window: _bindgen_ty_6 = 50;
 #[doc = " The last chance to draw in 2d."]
-pub const xplm_Phase_LastCockpit: _bindgen_ty_4 = 55;
+pub const xplm_Phase_LastCockpit: _bindgen_ty_6 = 55;
 #[doc = " Removed as of XPLM300; Use the full-blown XPLMMap API instead."]
-pub const xplm_Phase_LocalMap3D: _bindgen_ty_4 = 100;
+pub const xplm_Phase_LocalMap3D: _bindgen_ty_6 = 100;
 #[doc = " Removed as of XPLM300; Use the full-blown XPLMMap API instead."]
-pub const xplm_Phase_LocalMap2D: _bindgen_ty_4 = 101;
+pub const xplm_Phase_LocalMap2D: _bindgen_ty_6 = 101;
 #[doc = " Removed as of XPLM300; Use the full-blown XPLMMap API instead."]
-pub const xplm_Phase_LocalMapProfile: _bindgen_ty_4 = 102;
+pub const xplm_Phase_LocalMapProfile: _bindgen_ty_6 = 102;
 #[doc = " XPLMDrawingPhase\n\n This constant indicates which part of drawing we are in.  Drawing is done\n from the back to the front.  We get a callback before or after each item.\n Metaphases provide access to the beginning and end of the 3d (scene) and\n 2d (cockpit) drawing in a manner that is independent of new phases added\n  via X-Plane implementation.\n\n **NOTE**: As of XPLM302 the legacy 3D drawing phases (xplm_Phase_FirstScene\n   to xplm_Phase_LastScene) are deprecated. When running under X-Plane 11.50\n   with the modern Vulkan or Metal backend, X-Plane will no longer call\n   these drawing phases. There is a new drawing phase, xplm_Phase_Modern3D,\n   which is supported under OpenGL and Vulkan which is called out roughly\n   where the old before xplm_Phase_Airplanes phase was for blending. This\n   phase is *NOT* supported under Metal and comes with potentially\n   substantial performance overhead. Please do *NOT* opt into this phase if\n   you don't do any actual drawing that requires the depth buffer in some\n   way!\n\n **WARNING**: As X-Plane's scenery evolves, some drawing phases may cease to\n   exist and new ones may be invented.  If you need a particularly specific\n   use of these codes, consult Austin and/or be prepared to revise your code\n   as X-Plane evolves.\n"]
-pub type _bindgen_ty_4 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_6 = ::std::os::raw::c_uint;
 pub type XPLMDrawingPhase = ::std::os::raw::c_int;
 #[doc = " XPLMDrawCallback_f\n\n This is the prototype for a low level drawing callback.  You are passed in\n the phase and whether it is before or after.  If you are before the phase,\n return 1 to let X-Plane draw or 0 to suppress X-Plane drawing.  If you are\n after the phase the return value is ignored.\n\n Refcon is a unique value that you specify when registering the callback,\n allowing you to slip a pointer to your own data to the callback.\n\n Upon entry the OpenGL context will be correctly set up for you and OpenGL\n will be in 'local' coordinates for 3d drawing and panel coordinates for 2d\n drawing.  The OpenGL state (texturing, etc.) will be unknown.\n"]
 pub type XPLMDrawCallback_f = ::std::option::Option<
@@ -708,45 +725,45 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 #[doc = " GNS430, pilot side."]
-pub const xplm_device_GNS430_1: _bindgen_ty_5 = 0;
+pub const xplm_device_GNS430_1: _bindgen_ty_7 = 0;
 #[doc = " GNS430, copilot side."]
-pub const xplm_device_GNS430_2: _bindgen_ty_5 = 1;
+pub const xplm_device_GNS430_2: _bindgen_ty_7 = 1;
 #[doc = " GNS530, pilot side."]
-pub const xplm_device_GNS530_1: _bindgen_ty_5 = 2;
+pub const xplm_device_GNS530_1: _bindgen_ty_7 = 2;
 #[doc = " GNS530, copilot side."]
-pub const xplm_device_GNS530_2: _bindgen_ty_5 = 3;
+pub const xplm_device_GNS530_2: _bindgen_ty_7 = 3;
 #[doc = " generic airliner CDU, pilot side."]
-pub const xplm_device_CDU739_1: _bindgen_ty_5 = 4;
+pub const xplm_device_CDU739_1: _bindgen_ty_7 = 4;
 #[doc = " generic airliner CDU, copilot side."]
-pub const xplm_device_CDU739_2: _bindgen_ty_5 = 5;
+pub const xplm_device_CDU739_2: _bindgen_ty_7 = 5;
 #[doc = " G1000 Primary Flight Display, pilot side."]
-pub const xplm_device_G1000_PFD_1: _bindgen_ty_5 = 6;
+pub const xplm_device_G1000_PFD_1: _bindgen_ty_7 = 6;
 #[doc = " G1000 Multifunction Display."]
-pub const xplm_device_G1000_MFD: _bindgen_ty_5 = 7;
+pub const xplm_device_G1000_MFD: _bindgen_ty_7 = 7;
 #[doc = " G1000 Primary Flight Display, copilot side."]
-pub const xplm_device_G1000_PFD_2: _bindgen_ty_5 = 8;
+pub const xplm_device_G1000_PFD_2: _bindgen_ty_7 = 8;
 #[doc = " Primus CDU, pilot side."]
-pub const xplm_device_CDU815_1: _bindgen_ty_5 = 9;
+pub const xplm_device_CDU815_1: _bindgen_ty_7 = 9;
 #[doc = " Primus CDU, copilot side."]
-pub const xplm_device_CDU815_2: _bindgen_ty_5 = 10;
+pub const xplm_device_CDU815_2: _bindgen_ty_7 = 10;
 #[doc = " Primus Primary Flight Display, pilot side."]
-pub const xplm_device_Primus_PFD_1: _bindgen_ty_5 = 11;
+pub const xplm_device_Primus_PFD_1: _bindgen_ty_7 = 11;
 #[doc = " Primus Primary Flight Display, copilot side."]
-pub const xplm_device_Primus_PFD_2: _bindgen_ty_5 = 12;
+pub const xplm_device_Primus_PFD_2: _bindgen_ty_7 = 12;
 #[doc = " Primus Multifunction Display, pilot side."]
-pub const xplm_device_Primus_MFD_1: _bindgen_ty_5 = 13;
+pub const xplm_device_Primus_MFD_1: _bindgen_ty_7 = 13;
 #[doc = " Primus Multifunction Display, copilot side."]
-pub const xplm_device_Primus_MFD_2: _bindgen_ty_5 = 14;
+pub const xplm_device_Primus_MFD_2: _bindgen_ty_7 = 14;
 #[doc = " Primus Multifunction Display, central."]
-pub const xplm_device_Primus_MFD_3: _bindgen_ty_5 = 15;
+pub const xplm_device_Primus_MFD_3: _bindgen_ty_7 = 15;
 #[doc = " Primus Radio Management Unit, pilot side."]
-pub const xplm_device_Primus_RMU_1: _bindgen_ty_5 = 16;
+pub const xplm_device_Primus_RMU_1: _bindgen_ty_7 = 16;
 #[doc = " Primus Radio Management Unit, copilot side."]
-pub const xplm_device_Primus_RMU_2: _bindgen_ty_5 = 17;
+pub const xplm_device_Primus_RMU_2: _bindgen_ty_7 = 17;
 #[doc = " XPLMDeviceID\n\n This constant indicates the device we want to override or enhance. We can\n get a callback before or after each item.\n"]
-pub type _bindgen_ty_5 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_7 = ::std::os::raw::c_uint;
 pub type XPLMDeviceID = ::std::os::raw::c_int;
-#[doc = " XPLMAvionicsCallback_f\n\n This is the prototype for your drawing callback.  You are passed in the\n device you are enhancing/replacing,  and whether it is before or after\n X-Plane drawing. If you are before X-Plane, return 1 to let X-Plane draw or\n 0 to suppress X-Plane drawing.  If you are after the phase the return value\n is ignored.\n\n Refcon is a unique value that you specify when registering the callback,\n allowing you to slip a pointer to your own data to the callback.\n\n Upon entry the OpenGL context will be correctly set up for you and OpenGL\n will be in panel coordinates for 2d drawing.  The OpenGL state (texturing,\n etc.) will be unknown.\n"]
+#[doc = " XPLMAvionicsCallback_f\n\n This is the prototype for drawing callbacks for customized built-in device.\n You are passed in the device you are enhancing/replacing, and (if this is\n used for a built-in device that you are customizing) whether it is before\n or after X-Plane drawing. If you are before X-Plane, return 1 to let\n X-Plane draw or 0 to suppress X-Plane drawing. If you are called after\n X-Plane, the return value is ignored.\n\n Refcon is a unique value that you specify when registering the callback,\n allowing you to slip a pointer to your own data to the callback.\n\n Upon entry the OpenGL context will be correctly set up for you and OpenGL\n will be in panel coordinates for 2d drawing.  The OpenGL state (texturing,\n etc.) will be unknown.\n"]
 pub type XPLMAvionicsCallback_f = ::std::option::Option<
     unsafe extern "C" fn(
         inDeviceID: XPLMDeviceID,
@@ -754,15 +771,15 @@ pub type XPLMAvionicsCallback_f = ::std::option::Option<
         inRefcon: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int,
 >;
-#[doc = " XPLMAvionicsID\n\n This is an opaque identifier for an avionics display that you enhance or\n replace.  When you register your callbacks (via\n XPLMRegisterAvionicsCallbacksEx()), you will specify callbacks to handle\n drawing, and get back such a handle.\n"]
+#[doc = " XPLMAvionicsID\n\n This is an opaque identifier for an avionics display that you enhance or\n replace.  When you register your callbacks (via\n XPLMRegisterAvionicsCallbacksEx()) or create a new device (via\n XPLMCreateAvionicsDevice()), you will specify drawing and mouse callbacks,\n and get back such a handle.\n"]
 pub type XPLMAvionicsID = *mut ::std::os::raw::c_void;
-#[doc = " XPLMCustomizeAvionics_t\n\n The XPLMCustomizeAvionics_t structure defines all of the parameters used to\n replace or  enhance avionics for using XPLMRegisterAvionicsCallbacksEx().\n The structure will be expanded in future SDK APIs to include more features.\n Always set the structSize member to the size of  your struct in bytes!\n"]
+#[doc = " XPLMCustomizeAvionics_t\n\n The XPLMCustomizeAvionics_t structure defines all of the parameters used to\n replace or  enhance built-in simulator avionics devices using\n XPLMRegisterAvionicsCallbacksEx(). The structure will be expanded in future\n SDK APIs to include more features. Always set the structSize member to the\n size of your struct in bytes!\n"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct XPLMCustomizeAvionics_t {
     #[doc = " Used to inform XPLMRegisterAvionicsCallbacksEx() of the SDK version you    *\n compiled against; should always be set to sizeof(XPLMCustomizeAvionics_t)"]
     pub structSize: ::std::os::raw::c_int,
-    #[doc = " Which avionics device you want your drawing applied to."]
+    #[doc = " The built-in avionics device to which you want your drawing applied."]
     pub deviceId: XPLMDeviceID,
     #[doc = " The draw callback to be called before X-Plane draws."]
     pub drawCallbackBefore: XPLMAvionicsCallback_f,
@@ -838,13 +855,17 @@ fn bindgen_test_layout_XPLMCustomizeAvionics_t() {
     );
 }
 extern "C" {
-    #[doc = " XPLMRegisterAvionicsCallbacksEx\n\n This routine registers your callbacks for a device. This returns a handle.\n If the returned handle is NULL, there was a problem interpreting your\n input,  most likely the struct size was wrong for your SDK version.  If the\n returned handle is not NULL, your callbacks will be called according to\n schedule  as long as your plugin is not deactivated, or unloaded, or your\n call XPLMUnregisterAvionicsCallbacks().\n"]
+    #[doc = " XPLMRegisterAvionicsCallbacksEx\n\n This routine registers your callbacks for a built-in device. This returns a\n handle. If the returned handle is NULL, there was a problem interpreting\n your input, most likely the struct size was wrong for your SDK version. If\n the returned handle is not NULL, your callbacks will be called according to\n schedule as long as your plugin is not deactivated, or unloaded, or you\n call XPLMUnregisterAvionicsCallbacks().\n\n Note that you cannot register new callbacks for a device that is not a\n built-in one (for example a device that you have created, or a device\n another plugin has created).\n"]
     pub fn XPLMRegisterAvionicsCallbacksEx(
         inParams: *mut XPLMCustomizeAvionics_t,
     ) -> XPLMAvionicsID;
 }
 extern "C" {
-    #[doc = " XPLMUnregisterAvionicsCallbacks\n\n This routine unregisters your callbacks for a device. They will no longer\n be called.\n"]
+    #[doc = " XPLMGetAvionicsHandle\n\n This routine registers no callbacks for a built-in cockpit device, but\n returns a handle which allows you to interact with it using the Avionics\n Device API. Use this if you do not wish to intercept drawing, clicks and\n touchscreen calls to a device, but want to interact with its popup\n programmatically. This is equivalent to calling\n XPLMRegisterAvionicsCallbackEx() with NULL for all callbacks.\n"]
+    pub fn XPLMGetAvionicsHandle(inDeviceID: XPLMDeviceID) -> XPLMAvionicsID;
+}
+extern "C" {
+    #[doc = " XPLMUnregisterAvionicsCallbacks\n\n This routine unregisters your callbacks for a built-in device. You should\n only call this for handles you acquired from\n XPLMRegisterAvionicsCallbacksEx(). They will no longer be called.\n"]
     pub fn XPLMUnregisterAvionicsCallbacks(inAvionicsId: XPLMAvionicsID);
 }
 #[doc = " XPLMWindowID\n\n This is an opaque identifier for a window.  You use it to control your\n window. When you create a window (via either XPLMCreateWindow() or\n XPLMCreateWindowEx()), you will specify callbacks to handle drawing, mouse\n interaction, etc.\n"]
@@ -864,12 +885,6 @@ pub type XPLMHandleKey_f = ::std::option::Option<
         losingFocus: ::std::os::raw::c_int,
     ),
 >;
-pub const xplm_MouseDown: _bindgen_ty_6 = 1;
-pub const xplm_MouseDrag: _bindgen_ty_6 = 2;
-pub const xplm_MouseUp: _bindgen_ty_6 = 3;
-#[doc = " XPLMMouseStatus\n\n When the mouse is clicked, your mouse click routine is called repeatedly.\n It is first called with the mouse down message.  It is then called zero or\n more times with the mouse-drag message, and finally it is called once with\n the mouse up message.  All of these messages will be directed to the same\n window; you are guaranteed to not receive a drag or mouse-up event without\n first receiving the corresponding mouse-down.\n"]
-pub type _bindgen_ty_6 = ::std::os::raw::c_uint;
-pub type XPLMMouseStatus = ::std::os::raw::c_int;
 #[doc = " XPLMHandleMouseClick_f\n\n You receive this call for one of three events:\n\n - when the user clicks the mouse button down\n - (optionally) when the user drags the mouse after a down-click, but before\n   the up-click\n - when the user releases the down-clicked mouse button.\n\n You receive the x and y of the click, your window, and a refcon.  Return 1\n to consume the click, or 0 to pass it through.\n\n WARNING: passing clicks through windows (as of this writing) causes mouse\n tracking problems in X-Plane; do not use this feature!\n\n The units for x and y values match the units used in your window. Thus, for\n \"modern\" windows (those created via XPLMCreateWindowEx() and compiled\n against the XPLM300 library), the units are boxels, while legacy windows\n will get pixels. Legacy windows have their origin in the lower left of the\n main X-Plane window, while modern windows have their origin in the lower\n left of the global desktop space. In both cases, x increases as you move\n right, and y increases as you move up.\n"]
 pub type XPLMHandleMouseClick_f = ::std::option::Option<
     unsafe extern "C" fn(
@@ -880,17 +895,6 @@ pub type XPLMHandleMouseClick_f = ::std::option::Option<
         inRefcon: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int,
 >;
-#[doc = " X-Plane manages the cursor normally, plugin does not affect the cusrsor."]
-pub const xplm_CursorDefault: _bindgen_ty_7 = 0;
-#[doc = " X-Plane hides the cursor."]
-pub const xplm_CursorHidden: _bindgen_ty_7 = 1;
-#[doc = " X-Plane shows the cursor as the default arrow."]
-pub const xplm_CursorArrow: _bindgen_ty_7 = 2;
-#[doc = " X-Plane shows the cursor but lets you select an OS cursor."]
-pub const xplm_CursorCustom: _bindgen_ty_7 = 3;
-#[doc = " XPLMCursorStatus\n\n XPLMCursorStatus describes how you would like X-Plane to manage the cursor.\n See XPLMHandleCursor_f for more info.\n"]
-pub type _bindgen_ty_7 = ::std::os::raw::c_uint;
-pub type XPLMCursorStatus = ::std::os::raw::c_int;
 #[doc = " XPLMHandleCursor_f\n\n The SDK calls your cursor status callback when the mouse is over your\n plugin window.  Return a cursor status code to indicate how you would like\n X-Plane to manage the cursor.  If you return xplm_CursorDefault, the SDK\n will try lower-Z-order plugin windows, then let the sim manage the cursor.\n\n Note: you should never show or hide the cursor yourself---these APIs are\n typically reference-counted and thus cannot safely and predictably be used\n by the SDK.  Instead return one of xplm_CursorHidden to hide the cursor or\n xplm_CursorArrow/xplm_CursorCustom to show the cursor.\n\n If you want to implement a custom cursor by drawing a cursor in OpenGL, use\n xplm_CursorHidden to hide the OS cursor and draw the cursor using a 2-d\n drawing callback (after xplm_Phase_Window is probably a good choice, but\n see deprecation warnings on the drawing APIs!).  If you want to use a\n custom OS-based cursor, use xplm_CursorCustom to ask X-Plane to show the\n cursor but not affect its image.  You can then use an OS specific call like\n SetThemeCursor (Mac) or SetCursor/LoadCursor (Windows).\n\n The units for x and y values match the units used in your window. Thus, for\n \"modern\" windows (those created via XPLMCreateWindowEx() and compiled\n against the XPLM300 library), the units are boxels, while legacy windows\n will get pixels. Legacy windows have their origin in the lower left of the\n main X-Plane window, while modern windows have their origin in the lower\n left of the global desktop space. In both cases, x increases as you move\n right, and y increases as you move up.\n"]
 pub type XPLMHandleCursor_f = ::std::option::Option<
     unsafe extern "C" fn(
@@ -1503,7 +1507,7 @@ extern "C" {
         inColorRGB: *mut f32,
         inXOffset: ::std::os::raw::c_int,
         inYOffset: ::std::os::raw::c_int,
-        inChar: *mut ::std::os::raw::c_char,
+        inChar: *const ::std::os::raw::c_char,
         inWordWrapWidth: *mut ::std::os::raw::c_int,
         inFontID: XPLMFontID,
     );
@@ -2274,6 +2278,7 @@ pub const xplm_Language_Russian: _bindgen_ty_20 = 7;
 pub const xplm_Language_Greek: _bindgen_ty_20 = 8;
 pub const xplm_Language_Japanese: _bindgen_ty_20 = 9;
 pub const xplm_Language_Chinese: _bindgen_ty_20 = 10;
+pub const xplm_Language_Ukrainian: _bindgen_ty_20 = 11;
 #[doc = " XPLMLanguageCode\n\n These enums define what language the sim is running in. These enumerations\n do not imply that the sim can or does run in all of these languages; they\n simply provide a known encoding in the event that a given sim version is\n localized to a certain language.\n"]
 pub type _bindgen_ty_20 = ::std::os::raw::c_uint;
 pub type XPLMLanguageCode = ::std::os::raw::c_int;
@@ -2493,6 +2498,7 @@ pub const xplm_Nav_InnerMarker: _bindgen_ty_23 = 256;
 pub const xplm_Nav_Fix: _bindgen_ty_23 = 512;
 pub const xplm_Nav_DME: _bindgen_ty_23 = 1024;
 pub const xplm_Nav_LatLon: _bindgen_ty_23 = 2048;
+pub const xplm_Nav_TACAN: _bindgen_ty_23 = 4096;
 #[doc = " XPLMNavType\n\n These enumerations define the different types of navaids.  They are each\n defined with a separate bit so that they may be bit-wise added together to\n form sets of nav-aid types.\n\n NOTE: xplm_Nav_LatLon is a specific lat-lon coordinate entered into the\n FMS. It will not exist in the database, and cannot be programmed into the\n FMS. Querying the FMS for navaids will return it.  Use\n XPLMSetFMSEntryLatLon to set a lat/lon waypoint.\n"]
 pub type _bindgen_ty_23 = ::std::os::raw::c_uint;
 pub type XPLMNavType = ::std::os::raw::c_int;
@@ -2515,7 +2521,7 @@ extern "C" {
     pub fn XPLMFindLastNavAidOfType(inType: XPLMNavType) -> XPLMNavRef;
 }
 extern "C" {
-    #[doc = " XPLMFindNavAid\n\n This routine provides a number of searching capabilities for the nav\n database. XPLMFindNavAid will search through every navaid whose type is\n within inType (multiple types may be added together) and return any navaids\n found based on the following rules:\n\n * If inLat and inLon are not NULL, the navaid nearest to that lat/lon will\n   be returned, otherwise the last navaid found will be returned.\n\n * If inFrequency is not NULL, then any navaids considered must match this\n   frequency.  Note that this will screen out radio beacons that do not have\n   frequency data published (like inner markers) but not fixes and airports.\n\n * If inNameFragment is not NULL, only navaids that contain the fragment in\n   their name will be returned.\n\n * If inIDFragment is not NULL, only navaids that contain the fragment in\n   their IDs will be returned.\n\n This routine provides a simple way to do a number of useful searches:\n * Find the nearest navaid on this frequency.\n * Find the nearest airport.\n * Find the VOR whose ID is \"KBOS\".\n * Find the nearest airport whose name contains \"Chicago\".\n"]
+    #[doc = " XPLMFindNavAid\n\n This routine provides a number of searching capabilities for the nav\n database. XPLMFindNavAid will search through every navaid whose type is\n within inType (multiple types may be added together) and return any navaids\n found based on the following rules:\n\n * If inLat and inLon are not NULL, the navaid nearest to that lat/lon will\n   be returned, otherwise the last navaid found will be returned.\n\n * If inFrequency is not NULL, then any navaids considered must match this\n   frequency.  Note that this will screen out radio beacons that do not have\n   frequency data published (like inner markers) but not fixes and airports.\n\n * If inNameFragment is not NULL, only navaids that contain the fragment in\n   their name will be returned.\n\n * If inIDFragment is not NULL, only navaids that contain the fragment in\n   their IDs will be returned.\n\n This routine provides a simple way to do a number of useful searches:\n * Find the nearest navaid on this frequency.\n * Find the nearest airport.\n * Find the VOR whose ID is \"BOS\".\n * Find the nearest airport whose name contains \"Chicago\".\n"]
     pub fn XPLMFindNavAid(
         inNameFragment: *const ::std::os::raw::c_char,
         inIDFragment: *const ::std::os::raw::c_char,
@@ -2557,7 +2563,7 @@ extern "C" {
     pub fn XPLMSetDisplayedFMSEntry(inIndex: ::std::os::raw::c_int);
 }
 extern "C" {
-    #[doc = " XPLMSetDestinationFMSEntry\n\n This routine changes which entry the FMS is flying the aircraft toward.\n"]
+    #[doc = " XPLMSetDestinationFMSEntry\n\n This routine changes which entry the FMS is flying the aircraft toward. The\n track is from the n-1'th point to the n'th point.\n"]
     pub fn XPLMSetDestinationFMSEntry(inIndex: ::std::os::raw::c_int);
 }
 extern "C" {
@@ -3424,14 +3430,14 @@ fn bindgen_test_layout_XPLMWeatherInfo_t() {
     );
 }
 extern "C" {
-    #[doc = " XPLMGetMETARForAirport\n\n Get the last known METAR report for an airport by ICAO code. Note that the\n actual weather at that airport may have evolved significantly since the\n last downloaded METAR. outMETAR must point to a char buffer of at least 150\n characters. This call is not intended to be used per-frame.\n"]
+    #[doc = " XPLMGetMETARForAirport\n\n Get the last-downloaded METAR report for an airport by ICAO code. Note that\n the actual weather at that airport may have evolved significantly since the\n last downloaded METAR. outMETAR must point to a char buffer of at least 150\n characters. This call is not intended to be used per-frame. This call does\n not return the current weather at the airport, and returns an empty string\n if the system is not in real-weather mode.\n"]
     pub fn XPLMGetMETARForAirport(
         airport_id: *const ::std::os::raw::c_char,
         outMETAR: *mut XPLMFixedString150_t,
     );
 }
 extern "C" {
-    #[doc = " XPLMGetWeatherAtLocation\n\n Get the current weather conditions at a given location. Note that this does\n not work world-wide, only within the surrounding region. Return 1 if\n detailed weather was found, 0 if not. This call is not intended to be used\n per-frame.\n"]
+    #[doc = " XPLMGetWeatherAtLocation\n\n Get the current weather conditions at a given location. Note that this does\n not work world-wide, only within the surrounding region. Return 1 if\n detailed weather (i.e. an airport-specific METAR) was found, 0 if not. In\n both cases, the structure will contain the best data available. This call\n is not intended to be used per-frame.\n"]
     pub fn XPLMGetWeatherAtLocation(
         latitude: f64,
         longitude: f64,
