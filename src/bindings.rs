@@ -771,6 +771,43 @@ pub type XPLMAvionicsCallback_f = ::std::option::Option<
         inRefcon: *mut ::std::os::raw::c_void,
     ) -> ::std::os::raw::c_int,
 >;
+#[doc = " XPLMAvionicsMouse_f\n\n Mouse click callback for clicks into your screen or (2D-popup) bezel,\n useful if the device you are making simulates a touch-screen the user can\n click in the 3d cockpit, or if your pop-up's bezel has buttons that the\n user can click. Return 1 to consume the event, or 0 to let X-Plane process\n it (for stock avionics devices).\n"]
+pub type XPLMAvionicsMouse_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        x: ::std::os::raw::c_int,
+        y: ::std::os::raw::c_int,
+        inMouse: XPLMMouseStatus,
+        inRefcon: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int,
+>;
+#[doc = " XPLMAvionicsMouseWheel_f\n\n Mouse wheel callback for scroll actions into your screen or (2D-popup)\n bezel, useful if your bezel has knobs that can be turned using the mouse\n wheel, or if you want to simulate pinch-to-zoom on a touchscreen. Return 1\n to consume the event, or 0 to let X-Plane process it (for stock avionics\n devices). The number of \"clicks\" indicates how far the wheel was turned\n since the last callback. The wheel is 0 for the vertical axis or 1 for the\n horizontal axis (for OS/mouse combinations that support this).\n"]
+pub type XPLMAvionicsMouseWheel_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        x: ::std::os::raw::c_int,
+        y: ::std::os::raw::c_int,
+        wheel: ::std::os::raw::c_int,
+        clicks: ::std::os::raw::c_int,
+        inRefcon: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int,
+>;
+#[doc = " XPLMAvionicsCursor_f\n\n Cursor callback that decides which cursor to show when the mouse is over\n your screen or (2D-popup) bezel. Return xplm_CursorDefault to let X-Plane\n use which cursor to show, or other values to force the cursor to a\n particular one (see XPLMCursorStatus).\n"]
+pub type XPLMAvionicsCursor_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        x: ::std::os::raw::c_int,
+        y: ::std::os::raw::c_int,
+        inRefcon: *mut ::std::os::raw::c_void,
+    ) -> XPLMCursorStatus,
+>;
+#[doc = " XPLMAvionicsKeyboard_f\n\n Key callback called when your device is popped up and you've requested to\n capture the keyboard.  Return 1 to consume the event, or 0 to let X-Plane\n process it (for stock avionics devices).\n"]
+pub type XPLMAvionicsKeyboard_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        inKey: ::std::os::raw::c_char,
+        inFlags: XPLMKeyFlags,
+        inVirtualKey: ::std::os::raw::c_char,
+        inRefCon: *mut ::std::os::raw::c_void,
+        losingFocus: ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int,
+>;
 #[doc = " XPLMAvionicsID\n\n This is an opaque identifier for an avionics display that you enhance or\n replace.  When you register your callbacks (via\n XPLMRegisterAvionicsCallbacksEx()) or create a new device (via\n XPLMCreateAvionicsDevice()), you will specify drawing and mouse callbacks,\n and get back such a handle.\n"]
 pub type XPLMAvionicsID = *mut ::std::os::raw::c_void;
 #[doc = " XPLMCustomizeAvionics_t\n\n The XPLMCustomizeAvionics_t structure defines all of the parameters used to\n replace or  enhance built-in simulator avionics devices using\n XPLMRegisterAvionicsCallbacksEx(). The structure will be expanded in future\n SDK APIs to include more features. Always set the structSize member to the\n size of your struct in bytes!\n"]
@@ -785,6 +822,24 @@ pub struct XPLMCustomizeAvionics_t {
     pub drawCallbackBefore: XPLMAvionicsCallback_f,
     #[doc = " The draw callback to be called after X-Plane has drawn."]
     pub drawCallbackAfter: XPLMAvionicsCallback_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto the      *\n device's bezel."]
+    pub bezelClickCallback: XPLMAvionicsMouse_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto the      *\n device's bezel."]
+    pub bezelRightClickCallback: XPLMAvionicsMouse_f,
+    #[doc = " The callback that is called when the users uses the scroll wheel over the  *\n device's bezel."]
+    pub bezelScrollCallback: XPLMAvionicsMouseWheel_f,
+    #[doc = " The callback that lets you determine what cursor should be shown when the  *\n mouse is over the device's bezel."]
+    pub bezelCursorCallback: XPLMAvionicsCursor_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto the      *\n device's screen."]
+    pub screenTouchCallback: XPLMAvionicsMouse_f,
+    #[doc = " The right mouse click callback that is called when the user clicks onto the*\n device's screen."]
+    pub screenRightTouchCallback: XPLMAvionicsMouse_f,
+    #[doc = " The callback that is called when the users uses the scroll wheel over the  *\n device's screen."]
+    pub screenScrollCallback: XPLMAvionicsMouseWheel_f,
+    #[doc = " The callback that lets you determine what cursor should be shown when the  *\n mouse is over the device's screen."]
+    pub screenCursorCallback: XPLMAvionicsCursor_f,
+    #[doc = " The key callback that is called when the user types in the device's popup."]
+    pub keyboardCallback: XPLMAvionicsKeyboard_f,
     #[doc = " A reference which will be passed into each of your draw callbacks. Use this*\n to pass information to yourself as needed."]
     pub refcon: *mut ::std::os::raw::c_void,
 }
@@ -795,7 +850,7 @@ fn bindgen_test_layout_XPLMCustomizeAvionics_t() {
     let ptr = UNINIT.as_ptr();
     assert_eq!(
         ::std::mem::size_of::<XPLMCustomizeAvionics_t>(),
-        32usize,
+        104usize,
         concat!("Size of: ", stringify!(XPLMCustomizeAvionics_t))
     );
     assert_eq!(
@@ -844,8 +899,98 @@ fn bindgen_test_layout_XPLMCustomizeAvionics_t() {
         )
     );
     assert_eq!(
-        unsafe { ::std::ptr::addr_of!((*ptr).refcon) as usize - ptr as usize },
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelClickCallback) as usize - ptr as usize },
         24usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(bezelClickCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelRightClickCallback) as usize - ptr as usize },
+        32usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(bezelRightClickCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelScrollCallback) as usize - ptr as usize },
+        40usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(bezelScrollCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelCursorCallback) as usize - ptr as usize },
+        48usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(bezelCursorCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenTouchCallback) as usize - ptr as usize },
+        56usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(screenTouchCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenRightTouchCallback) as usize - ptr as usize },
+        64usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(screenRightTouchCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenScrollCallback) as usize - ptr as usize },
+        72usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(screenScrollCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenCursorCallback) as usize - ptr as usize },
+        80usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(screenCursorCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).keyboardCallback) as usize - ptr as usize },
+        88usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCustomizeAvionics_t),
+            "::",
+            stringify!(keyboardCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).refcon) as usize - ptr as usize },
+        96usize,
         concat!(
             "Offset of field: ",
             stringify!(XPLMCustomizeAvionics_t),
@@ -867,6 +1012,423 @@ extern "C" {
 extern "C" {
     #[doc = " XPLMUnregisterAvionicsCallbacks\n\n This routine unregisters your callbacks for a built-in device. You should\n only call this for handles you acquired from\n XPLMRegisterAvionicsCallbacksEx(). They will no longer be called.\n"]
     pub fn XPLMUnregisterAvionicsCallbacks(inAvionicsId: XPLMAvionicsID);
+}
+#[doc = " XPLMAvionicsScreenCallback_f\n\n This is the prototype for drawing callbacks for custom devices' screens.\n Refcon is a unique value that you specify when creating the device,\n allowing you to slip a pointer to your own data to the callback.\n\n Upon entry the OpenGL context will be correctly set up for you and OpenGL\n will be in panel coordinates for 2d drawing.  The OpenGL state (texturing,\n etc.) will be unknown. X-Plane does not clear your screen for you between\n calls - this means you can re-use portions to save drawing, but otherwise\n you must call glClear() to erase the screen's contents.\n"]
+pub type XPLMAvionicsScreenCallback_f =
+    ::std::option::Option<unsafe extern "C" fn(inRefcon: *mut ::std::os::raw::c_void)>;
+#[doc = " XPLMAvionicsBezelCallback_f\n\n This is the prototype for drawing callbacks for custom devices' bezel. You\n are passed in the red, green, and blue values you can optinally use for\n tinting your bezel accoring to ambiant light.\n\n Refcon is a unique value that you specify when creating the device,\n allowing you to slip a pointer to your own data to the callback.\n\n Upon entry the OpenGL context will be correctly set up for you and OpenGL\n will be in panel coordinates for 2d drawing.  The OpenGL state (texturing,\n etc.) will be unknown.\n"]
+pub type XPLMAvionicsBezelCallback_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        inAmbiantR: f32,
+        inAmbiantG: f32,
+        inAmbiantB: f32,
+        inRefcon: *mut ::std::os::raw::c_void,
+    ),
+>;
+#[doc = " XPLMAvionicsBrightness_f\n\n This is the prototype for screen brightness callbacks for custom devices.\n If you provide a callback, you can return the ratio of the screen's maximum\n brightness that the simulator should use when displaying the screen in the\n 3D cockpit.\n\n inRheoValue is the current ratio value (between 0 and 1) of the instrument\n brightness rheostat to which the device is bound.\n\n inAmbientBrightness is the value (between 0 and 1) that the callback should\n return for the screen to be at a usable brightness based on ambient light\n (if your device has a photo cell and automatically adjusts its brightness,\n you can return this and your screen will be at the optimal brightness to be\n readable, but not blind the pilot).\n\n inBusVoltsRatio is the ratio of the nominal voltage currently present on\n the bus to which the device is bound, or -1 if the device is not bound to\n the current aircraft.\n\n Refcon is a unique value that you specify when creating the device,\n allowing you to slip a pointer to your own data to the callback.\n"]
+pub type XPLMAvionicsBrightness_f = ::std::option::Option<
+    unsafe extern "C" fn(
+        inRheoValue: f32,
+        inAmbiantBrightness: f32,
+        inBusVoltsRatio: f32,
+        inRefcon: *mut ::std::os::raw::c_void,
+    ) -> f32,
+>;
+#[doc = " XPLMCreateAvionics_t\n\n The XPLMCreateAvionics_t structure defines all of the parameters used to\n generate your own glass cockpit device by using XPLMCreateAvionicsEx(). The\n structure will be expanded in future SDK APIs to include more features.\n Always set the structSize member to the size of your struct in bytes!\n"]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct XPLMCreateAvionics_t {
+    #[doc = " Used to inform XPLMCreateAvionicsEx() of the SDK version you compiled      *\n against; should always be set to sizeof(XPLMCreateAvionics_t)"]
+    pub structSize: ::std::os::raw::c_int,
+    #[doc = " Width of the device's screen in pixels."]
+    pub screenWidth: ::std::os::raw::c_int,
+    #[doc = " Height of the device's screen in pixels."]
+    pub screenHeight: ::std::os::raw::c_int,
+    #[doc = " Width of the bezel around your device's screen for 2D pop-ups."]
+    pub bezelWidth: ::std::os::raw::c_int,
+    #[doc = " Height of the bezel around your device's screen for 2D pop-ups."]
+    pub bezelHeight: ::std::os::raw::c_int,
+    #[doc = " The screen's lateral offset into the bezel for 2D pop-ups."]
+    pub screenOffsetX: ::std::os::raw::c_int,
+    #[doc = " The screen's vertical offset into the bezel for 2D pop-ups."]
+    pub screenOffsetY: ::std::os::raw::c_int,
+    #[doc = " If set to true (1), X-Plane won't call your plugin to re-render the        *\n device's screen every frame. Instead, you should tell X-Plane you want to  *\n refresh your screen with XPLMAvionicsNeedsDrawing(), and X-Plane will call *\n you before rendering the next simulator frame."]
+    pub drawOnDemand: ::std::os::raw::c_int,
+    #[doc = " The draw callback you will use to draw the 2D-popup bezel. This is called  *\n only when the popup window is visible, and X-Plane is about to draw the    *\n bezel in it."]
+    pub bezelDrawCallback: XPLMAvionicsBezelCallback_f,
+    #[doc = " The draw callback you will be using to draw into the device's screen       *\n framebuffer."]
+    pub drawCallback: XPLMAvionicsScreenCallback_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto your     *\n bezel."]
+    pub bezelClickCallback: XPLMAvionicsMouse_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto your     *\n bezel."]
+    pub bezelRightClickCallback: XPLMAvionicsMouse_f,
+    #[doc = " The callback that is called when the users uses the scroll wheel over your *\n avionics' bezel."]
+    pub bezelScrollCallback: XPLMAvionicsMouseWheel_f,
+    #[doc = " The callback that lets you determine what cursor should be shown when the  *\n mouse is over your device's bezel."]
+    pub bezelCursorCallback: XPLMAvionicsCursor_f,
+    #[doc = " The mouse click callback that is called when the user clicks onto your     *\n screen."]
+    pub screenTouchCallback: XPLMAvionicsMouse_f,
+    #[doc = " The right mouse click callback that is called when the user clicks onto    *\n your screen."]
+    pub screenRightTouchCallback: XPLMAvionicsMouse_f,
+    #[doc = " The callback that is called when the users uses the scroll wheel over your *\n avionics' screen."]
+    pub screenScrollCallback: XPLMAvionicsMouseWheel_f,
+    #[doc = " The callback that lets you determine what cursor should be shown when the  *\n mouse is over your device's screen."]
+    pub screenCursorCallback: XPLMAvionicsCursor_f,
+    #[doc = " The key callback that is called when the user types in your popup."]
+    pub keyboardCallback: XPLMAvionicsKeyboard_f,
+    #[doc = " The callback that is called to determine the absolute brightness of the    *\n device's screen. Set to NULL to use X-Plane's default behaviour."]
+    pub brightnessCallback: XPLMAvionicsBrightness_f,
+    #[doc = " A null-terminated string of maximum 64 characters to uniquely identify your*\n cockpit device. This must be unique (you cannot re-use an ID that X-Plane  *\n or another plugin provides), and it must not contain spaces. This is the   *\n string the OBJ file must reference when marking polygons with              *\n ATTR_cockpit_device. The string is copied when you call                    *\n XPLMCreateAvionicsEx, so you don't need to hold this string in memory after*\n the call."]
+    pub deviceID: *mut ::std::os::raw::c_char,
+    #[doc = " A null-terminated string to give a user-readable name to your device, which*\n can be presented in UI dialogs."]
+    pub deviceName: *mut ::std::os::raw::c_char,
+    #[doc = " A reference which will be passed into your draw and mouse callbacks. Use   *\n this to pass information to yourself as needed."]
+    pub refcon: *mut ::std::os::raw::c_void,
+}
+#[test]
+fn bindgen_test_layout_XPLMCreateAvionics_t() {
+    const UNINIT: ::std::mem::MaybeUninit<XPLMCreateAvionics_t> = ::std::mem::MaybeUninit::uninit();
+    let ptr = UNINIT.as_ptr();
+    assert_eq!(
+        ::std::mem::size_of::<XPLMCreateAvionics_t>(),
+        152usize,
+        concat!("Size of: ", stringify!(XPLMCreateAvionics_t))
+    );
+    assert_eq!(
+        ::std::mem::align_of::<XPLMCreateAvionics_t>(),
+        8usize,
+        concat!("Alignment of ", stringify!(XPLMCreateAvionics_t))
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).structSize) as usize - ptr as usize },
+        0usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(structSize)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenWidth) as usize - ptr as usize },
+        4usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenWidth)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenHeight) as usize - ptr as usize },
+        8usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenHeight)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelWidth) as usize - ptr as usize },
+        12usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelWidth)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelHeight) as usize - ptr as usize },
+        16usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelHeight)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenOffsetX) as usize - ptr as usize },
+        20usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenOffsetX)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenOffsetY) as usize - ptr as usize },
+        24usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenOffsetY)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).drawOnDemand) as usize - ptr as usize },
+        28usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(drawOnDemand)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelDrawCallback) as usize - ptr as usize },
+        32usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelDrawCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).drawCallback) as usize - ptr as usize },
+        40usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(drawCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelClickCallback) as usize - ptr as usize },
+        48usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelClickCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelRightClickCallback) as usize - ptr as usize },
+        56usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelRightClickCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelScrollCallback) as usize - ptr as usize },
+        64usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelScrollCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).bezelCursorCallback) as usize - ptr as usize },
+        72usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(bezelCursorCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenTouchCallback) as usize - ptr as usize },
+        80usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenTouchCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenRightTouchCallback) as usize - ptr as usize },
+        88usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenRightTouchCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenScrollCallback) as usize - ptr as usize },
+        96usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenScrollCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).screenCursorCallback) as usize - ptr as usize },
+        104usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(screenCursorCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).keyboardCallback) as usize - ptr as usize },
+        112usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(keyboardCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).brightnessCallback) as usize - ptr as usize },
+        120usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(brightnessCallback)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).deviceID) as usize - ptr as usize },
+        128usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(deviceID)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).deviceName) as usize - ptr as usize },
+        136usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(deviceName)
+        )
+    );
+    assert_eq!(
+        unsafe { ::std::ptr::addr_of!((*ptr).refcon) as usize - ptr as usize },
+        144usize,
+        concat!(
+            "Offset of field: ",
+            stringify!(XPLMCreateAvionics_t),
+            "::",
+            stringify!(refcon)
+        )
+    );
+}
+extern "C" {
+    #[doc = " XPLMCreateAvionicsEx\n\n Creates a new cockpit device to be used in the 3D cockpit. You can call\n this at any time: if an aircraft referencing your device is loaded before\n your plugin, the simulator will make sure to retroactively map your display\n into it.\n\n             When you are done with the device, and at least before your\n             plugin is unloaded, you should destroy the device using\n             XPLMDestroyAvionics().\n"]
+    pub fn XPLMCreateAvionicsEx(inParams: *mut XPLMCreateAvionics_t) -> XPLMAvionicsID;
+}
+extern "C" {
+    #[doc = " XPLMDestroyAvionics\n\n Destroys the cockpit device and deallocates its screen's memory. You should\n only ever call this for devices that you created using\n XPLMCreateAvionicsEx(), not X-Plane' built-ine devices you have customised.\n"]
+    pub fn XPLMDestroyAvionics(inHandle: XPLMAvionicsID);
+}
+extern "C" {
+    #[doc = " XPLMIsAvionicsBound\n\n Returns true (1) if the cockpit device with the given handle is used by the\n current aircraft.\n"]
+    pub fn XPLMIsAvionicsBound(inHandle: XPLMAvionicsID) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMSetAvionicsBrightnessRheo\n\n Sets the brightness setting's value, between 0 and 1, for the screen of the\n cockpit device with the given handle.\n\n If the device is bound to the current aircraft, this is a shortcut to\n setting the brightness rheostat value using the\n `sim/cockpit2/switches/instrument_brightness_ratio[]` dataref; this sets\n the slot in the `instrument_brightness_ratio` array to which the device is\n bound.\n\n If the device is not currently bound, the device keeps track of its own\n screen brightness rheostat, allowing you to control the brightness even\n though it isn't connected to the `instrument_brightness_ratio` dataref.\n"]
+    pub fn XPLMSetAvionicsBrightnessRheo(inHandle: XPLMAvionicsID, brightness: f32);
+}
+extern "C" {
+    #[doc = " XPLMGetAvionicsBrightnessRheo\n\n Returns the brightness setting value, between 0 and 1, for the screen of\n the cockpit device with the given handle.\n\n         If the device is bound to the current aircraft, this is a shortcut\n         to getting the brightness rheostat value from the\n         `sim/cockpit2/electrical/instrument_brightness_ratio` dataref; this\n         gets the slot in the `instrument_brightness_ratio` array to which\n         the device is bound.\n\n         If the device is not currently bound, this returns the device's own\n         brightness rheostat value.\n"]
+    pub fn XPLMGetAvionicsBrightnessRheo(inHandle: XPLMAvionicsID) -> f32;
+}
+extern "C" {
+    #[doc = " XPLMGetAvionicsBusVoltsRatio\n\n Returns the ratio of the nominal voltage (1.0 means full nominal voltage)\n of the electrical bus to which the given avionics device is bound, or -1 if\n the device is not bound to the current aircraft.\n"]
+    pub fn XPLMGetAvionicsBusVoltsRatio(inHandle: XPLMAvionicsID) -> f32;
+}
+extern "C" {
+    #[doc = " XPLMIsCursorOverAvionics\n\n Returns true (1) if the mouse is currently over the screen of cockpit\n device with the given handle. If they are not NULL, the optional x and y\n arguments are filled with the co-ordinates of the mouse cursor in device\n co-ordinates.\n"]
+    pub fn XPLMIsCursorOverAvionics(
+        inHandle: XPLMAvionicsID,
+        outX: *mut ::std::os::raw::c_int,
+        outY: *mut ::std::os::raw::c_int,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMAvionicsNeedsDrawing\n\n Tells X-Plane that your device's screen needs to be re-drawn. If your\n device is marked for on-demand drawing, X-Plane will call your screen\n drawing callback before drawing the next simulator frame. If your device is\n already drawn every frame, this has no effect.\n"]
+    pub fn XPLMAvionicsNeedsDrawing(inHandle: XPLMAvionicsID);
+}
+extern "C" {
+    #[doc = " XPLMSetAvionicsPopupVisible\n\n Shows or hides the popup window for a cockpit device.\n"]
+    pub fn XPLMSetAvionicsPopupVisible(inHandle: XPLMAvionicsID, inVisible: ::std::os::raw::c_int);
+}
+extern "C" {
+    #[doc = " XPLMIsAvionicsPopupVisible\n\n Returns true (1) if the popup window for a cockpit device is visible.\n"]
+    pub fn XPLMIsAvionicsPopupVisible(inHandle: XPLMAvionicsID) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMPopOutAvionics\n\n Pops out the window for a cockpit device.\n"]
+    pub fn XPLMPopOutAvionics(inHandle: XPLMAvionicsID);
+}
+extern "C" {
+    #[doc = " XPLMIsAvionicsPoppedOut\n\n Returns true (1) if the popup window for a cockpit device is popped out.\n"]
+    pub fn XPLMIsAvionicsPoppedOut(inHandle: XPLMAvionicsID) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMTakeAvionicsKeyboardFocus\n\n This routine gives keyboard focus to the popup window of a custom cockpit\n device, if it is visible.\n"]
+    pub fn XPLMTakeAvionicsKeyboardFocus(inHandle: XPLMAvionicsID);
+}
+extern "C" {
+    #[doc = " XPLMHasAvionicsKeyboardFocus\n\n Returns true (1) if the popup window for a cockpit device has keyboard\n focus.\n"]
+    pub fn XPLMHasAvionicsKeyboardFocus(inHandle: XPLMAvionicsID) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMGetAvionicsGeometry\n\n Returns the bounds of a cockpit device's popup window in the X-Plane\n coordinate system.\n"]
+    pub fn XPLMGetAvionicsGeometry(
+        inHandle: XPLMAvionicsID,
+        outLeft: *mut ::std::os::raw::c_int,
+        outTop: *mut ::std::os::raw::c_int,
+        outRight: *mut ::std::os::raw::c_int,
+        outBottom: *mut ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetAvionicsGeometry\n\n Sets the size and position of a cockpit device's popup window in the\n X-Plane coordinate system.\n"]
+    pub fn XPLMSetAvionicsGeometry(
+        inHandle: XPLMAvionicsID,
+        inLeft: ::std::os::raw::c_int,
+        inTop: ::std::os::raw::c_int,
+        inRight: ::std::os::raw::c_int,
+        inBottom: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMGetAvionicsGeometryOS\n\n Returns the bounds of a cockpit device's popped-out window.\n"]
+    pub fn XPLMGetAvionicsGeometryOS(
+        inHandle: XPLMAvionicsID,
+        outLeft: *mut ::std::os::raw::c_int,
+        outTop: *mut ::std::os::raw::c_int,
+        outRight: *mut ::std::os::raw::c_int,
+        outBottom: *mut ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetAvionicsGeometryOS\n\n Sets the size and position of a cockpit device's popped-out window.\n"]
+    pub fn XPLMSetAvionicsGeometryOS(
+        inHandle: XPLMAvionicsID,
+        inLeft: ::std::os::raw::c_int,
+        inTop: ::std::os::raw::c_int,
+        inRight: ::std::os::raw::c_int,
+        inBottom: ::std::os::raw::c_int,
+    );
 }
 #[doc = " XPLMWindowID\n\n This is an opaque identifier for a window.  You use it to control your\n window. When you create a window (via either XPLMCreateWindow() or\n XPLMCreateWindowEx()), you will specify callbacks to handle drawing, mouse\n interaction, etc.\n"]
 pub type XPLMWindowID = *mut ::std::os::raw::c_void;
@@ -2599,6 +3161,119 @@ extern "C" {
     #[doc = " XPLMClearFMSEntry\n\n This routine clears the given entry, potentially shortening the flight\n plan.\n"]
     pub fn XPLMClearFMSEntry(inIndex: ::std::os::raw::c_int);
 }
+pub const xplm_Fpl_Pilot_Primary: _bindgen_ty_24 = 0;
+pub const xplm_Fpl_CoPilot_Primary: _bindgen_ty_24 = 1;
+pub const xplm_Fpl_Pilot_Approach: _bindgen_ty_24 = 2;
+pub const xplm_Fpl_CoPilot_Approach: _bindgen_ty_24 = 3;
+pub const xplm_Fpl_Pilot_Temporary: _bindgen_ty_24 = 4;
+pub const xplm_Fpl_CoPilot_Temporary: _bindgen_ty_24 = 5;
+#[doc = " XPLMNavFlightPlan\n\n     These enumerations defines the flightplan you are accesing using the\n     FMSFlightPlan functions. An airplane can have up to two navigation\n     devices (GPS or FMS) and each device can have two flightplans. A GPS\n     has an enroute and an approach flightplan. An FMS has an active and a\n     temporary flightplan. If you are trying to access a flightplan that\n     doesn't exist in your aircraft, e.g. asking a GPS for a temp\n     flightplan, FMSFlighPlan functions have no effect and will return no\n     information.\n"]
+pub type _bindgen_ty_24 = ::std::os::raw::c_uint;
+pub type XPLMNavFlightPlan = ::std::os::raw::c_int;
+extern "C" {
+    #[doc = " XPLMCountFMSFlightPlanEntries\n\n This routine returns the number of entries in the FMS.\n"]
+    pub fn XPLMCountFMSFlightPlanEntries(inFlightPlan: XPLMNavFlightPlan) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMGetDisplayedFMSFlightPlanEntry\n\n This routine returns the index of the entry the pilot is viewing.\n"]
+    pub fn XPLMGetDisplayedFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMGetDestinationFMSFlightPlanEntry\n\n This routine returns the index of the entry the FMS is flying to.\n"]
+    pub fn XPLMGetDestinationFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    #[doc = " XPLMSetDisplayedFMSFlightPlanEntry\n\n This routine changes which entry the FMS is showing to the index specified.\n"]
+    pub fn XPLMSetDisplayedFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetDestinationFMSFlightPlanEntry\n\n This routine changes which entry the FMS is flying the aircraft toward. The\n track is from the n-1'th point to the n'th point.\n"]
+    pub fn XPLMSetDestinationFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetDirectToFMSFlightPlanEntry\n\n This routine changes which entry the FMS is flying the aircraft toward. The\n track is from the current position of the aircraft directly to the n'th\n point, ignoring the point before it.\n"]
+    pub fn XPLMSetDirectToFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMGetFMSFlightPlanEntryInfo\n\n This routine returns information about a given FMS entry. If the entry is\n an airport or navaid, a reference to a nav entry can be returned allowing\n you to find additional information (such as a frequency, ILS heading, name,\n etc.). Note that this reference can be XPLM_NAV_NOT_FOUND until the\n information has been looked up asynchronously, so after flightplan changes,\n it might take up to a second for this field to become populated. The other\n information is available immediately. For a lat/lon entry, the lat/lon is\n returned by this routine but the navaid cannot be looked up (and the\n reference will be XPLM_NAV_NOT_FOUND). FMS name entry buffers should be at\n least 256 chars in length.\n\n WARNING: Due to a bug in X-Plane prior to 11.31, the navaid reference will\n not be set to XPLM_NAV_NOT_FOUND while no data is available, and instead\n just remain the value of the variable that you passed the pointer to.\n Therefore, always initialize the variable to XPLM_NAV_NOT_FOUND before\n passing the pointer to this function.\n"]
+    pub fn XPLMGetFMSFlightPlanEntryInfo(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+        outType: *mut XPLMNavType,
+        outID: *mut ::std::os::raw::c_char,
+        outRef: *mut XPLMNavRef,
+        outAltitude: *mut ::std::os::raw::c_int,
+        outLat: *mut f32,
+        outLon: *mut f32,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetFMSFlightPlanEntryInfo\n\n This routine changes an entry in the FMS to have the destination navaid\n passed in and the altitude specified.  Use this only for airports, fixes,\n and radio-beacon navaids.  Currently of radio beacons, the FMS can only\n support VORs and NDBs. Use the routines below to clear or fly to a lat/lon.\n"]
+    pub fn XPLMSetFMSFlightPlanEntryInfo(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+        inRef: XPLMNavRef,
+        inAltitude: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetFMSFlightPlanEntryLatLon\n\n This routine changes the entry in the FMS to a lat/lon entry with the given\n coordinates.\n"]
+    pub fn XPLMSetFMSFlightPlanEntryLatLon(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+        inLat: f32,
+        inLon: f32,
+        inAltitude: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSetFMSFlightPlanEntryLatLonWithId\n\n This routine changes the entry in the FMS to a lat/lon entry with the given\n coordinates. You can specify the display ID of the waypoint.\n"]
+    pub fn XPLMSetFMSFlightPlanEntryLatLonWithId(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+        inLat: f32,
+        inLon: f32,
+        inAltitude: ::std::os::raw::c_int,
+        inId: *const ::std::os::raw::c_char,
+        inIdLength: ::std::os::raw::c_uint,
+    );
+}
+extern "C" {
+    #[doc = " XPLMClearFMSFlightPlanEntry\n\n This routine clears the given entry, potentially shortening the flight\n plan.\n"]
+    pub fn XPLMClearFMSFlightPlanEntry(
+        inFlightPlan: XPLMNavFlightPlan,
+        inIndex: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " XPLMLoadFMSFlightPlan\n\n Loads an X-Plane 11 and later formatted flightplan from the buffer into the\n FMS or GPS, including instrument procedures. Use device index 0 for the\n pilot-side and device index 1 for the co-pilot side unit.\n"]
+    pub fn XPLMLoadFMSFlightPlan(
+        inDevice: ::std::os::raw::c_int,
+        inBuffer: *const ::std::os::raw::c_char,
+        inBufferLen: ::std::os::raw::c_uint,
+    );
+}
+extern "C" {
+    #[doc = " XPLMSaveFMSFlightPlan\n\n Saves an X-Plane 11 formatted flightplan from the FMS or GPS into a char\n buffer that you provide. Use device index 0 for the pilot-side and device\n index 1 for the co-pilot side unit. Provide the length of the buffer you\n allocated. X-Plane will write a null-terminated string if the full flight\n plan fits into the buffer. If your buffer is too small, X-Plane will write\n inBufferLen characters, and the resulting buffer is not null-terminated.\n The return value is the number of characters (including null terminator)\n that X-Plane needed to write the flightplan. If this number is larger than\n the buffer you provided, the flightplan in the buffer will be incomplete\n and the buffer not null-terminated.\n"]
+    pub fn XPLMSaveFMSFlightPlan(
+        inDevice: ::std::os::raw::c_int,
+        inBuffer: *mut ::std::os::raw::c_char,
+        inBufferLen: ::std::os::raw::c_uint,
+    ) -> ::std::os::raw::c_uint;
+}
 extern "C" {
     #[doc = " XPLMGetGPSDestinationType\n\n This routine returns the type of the currently selected GPS destination,\n one of fix, airport, VOR or NDB.\n"]
     pub fn XPLMGetGPSDestinationType() -> XPLMNavType;
@@ -2755,11 +3430,11 @@ extern "C" {
     );
 }
 #[doc = " Your callback runs before X-Plane integrates the flight model."]
-pub const xplm_FlightLoop_Phase_BeforeFlightModel: _bindgen_ty_24 = 0;
+pub const xplm_FlightLoop_Phase_BeforeFlightModel: _bindgen_ty_25 = 0;
 #[doc = " Your callback runs after X-Plane integrates the flight model."]
-pub const xplm_FlightLoop_Phase_AfterFlightModel: _bindgen_ty_24 = 1;
+pub const xplm_FlightLoop_Phase_AfterFlightModel: _bindgen_ty_25 = 1;
 #[doc = " XPLMFlightLoopPhaseType\n\n You can register a flight loop callback to run either before or after the\n flight model is integrated by X-Plane.\n"]
-pub type _bindgen_ty_24 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_25 = ::std::os::raw::c_uint;
 pub type XPLMFlightLoopPhaseType = ::std::os::raw::c_int;
 #[doc = " XPLMFlightLoopID\n\n This is an opaque identifier for a flight loop callback. You can use this\n identifier to easily track and remove your callbacks, or to use the new\n flight loop APIs.\n"]
 pub type XPLMFlightLoopID = *mut ::std::os::raw::c_void;
@@ -2886,36 +3561,36 @@ extern "C" {
     );
 }
 #[doc = " Incoming speech on COM1"]
-pub const xplm_AudioRadioCom1: _bindgen_ty_25 = 0;
+pub const xplm_AudioRadioCom1: _bindgen_ty_26 = 0;
 #[doc = " Incoming speech on COM2"]
-pub const xplm_AudioRadioCom2: _bindgen_ty_25 = 1;
+pub const xplm_AudioRadioCom2: _bindgen_ty_26 = 1;
 #[doc = " Pilot's own speech"]
-pub const xplm_AudioRadioPilot: _bindgen_ty_25 = 2;
+pub const xplm_AudioRadioPilot: _bindgen_ty_26 = 2;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioRadioCopilot: _bindgen_ty_25 = 3;
+pub const xplm_AudioRadioCopilot: _bindgen_ty_26 = 3;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioExteriorAircraft: _bindgen_ty_25 = 4;
+pub const xplm_AudioExteriorAircraft: _bindgen_ty_26 = 4;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioExteriorEnvironment: _bindgen_ty_25 = 5;
+pub const xplm_AudioExteriorEnvironment: _bindgen_ty_26 = 5;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioExteriorUnprocessed: _bindgen_ty_25 = 6;
+pub const xplm_AudioExteriorUnprocessed: _bindgen_ty_26 = 6;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioInterior: _bindgen_ty_25 = 7;
+pub const xplm_AudioInterior: _bindgen_ty_26 = 7;
 #[doc = " Copilot's own speech"]
-pub const xplm_AudioUI: _bindgen_ty_25 = 8;
+pub const xplm_AudioUI: _bindgen_ty_26 = 8;
 #[doc = " Dedicated ground vehicle cable"]
-pub const xplm_AudioGround: _bindgen_ty_25 = 9;
+pub const xplm_AudioGround: _bindgen_ty_26 = 9;
 #[doc = " Master bus. Not normally to be used directly."]
-pub const xplm_Master: _bindgen_ty_25 = 10;
+pub const xplm_Master: _bindgen_ty_26 = 10;
 #[doc = " XPLMAudioBus\n\n This enumeration states the type of audio you wish to play - that is, the\n part of the simulated environment that the audio belongs in. If you use\n FMOD directly, note that COM1, COM2, Pilot and GND exist in a different\n FMOD bank so you may see these channels being unloaded/reloaded\n independently of the others.\n"]
-pub type _bindgen_ty_25 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_26 = ::std::os::raw::c_uint;
 pub type XPLMAudioBus = ::std::os::raw::c_int;
 #[doc = " Master bank. Handles all aircraft and environmental audio."]
-pub const xplm_MasterBank: _bindgen_ty_26 = 0;
+pub const xplm_MasterBank: _bindgen_ty_27 = 0;
 #[doc = " Radio bank. Handles COM1/COM2/GND/Pilot/Copilot."]
-pub const xplm_RadioBank: _bindgen_ty_26 = 1;
+pub const xplm_RadioBank: _bindgen_ty_27 = 1;
 #[doc = " XPLMBankID\n\n These values are returned as the parameter of the\n \"XPLM_MSG_FMOD_BANK_LOADED\" and \"XPLM_MSG_FMOD_BANK_UNLOADING\" messages.\n"]
-pub type _bindgen_ty_26 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_27 = ::std::os::raw::c_uint;
 pub type XPLMBankID = ::std::os::raw::c_int;
 pub const FMOD_RESULT_FMOD_OK: FMOD_RESULT = 0;
 #[doc = " These definitions are enough to play a basic sound without linking to the full FMOD distribution. You can still position it in 3D\n and change other basic parameters. In all cases where an FMOD_RESULT is returned, the full range of FMOD_RESULT codes are used - the\n status will in almost all situations be coming straight from FMOD - so the single definition here is purely to create a matching\n datatype and allow simple \"is OK\" and \"is not OK\" tests."]

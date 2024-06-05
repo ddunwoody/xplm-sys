@@ -45,6 +45,7 @@ fn generate_bindings(sdk_path: &std::path::Path) {
             "-DXPLM301",
             "-DXPLM303",
             "-DXPLM400",
+            "-DXPLM410",
             "-DLIN", // doesn't matter for bindings, but we need to be defined to be able to compile
             &format!("-I{}", sdk_path.join("CHeaders/XPLM").display()),
         ])
